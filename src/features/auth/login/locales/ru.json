@@ -1,0 +1,9 @@
+{
+  "title": "Вход",
+  "email": "Email",
+  "emailPlaceholder": "you@example.com",
+  "password": "Пароль",
+  "passwordMinLength": "Пароль должен содержать минимум 3 символа",
+  "invalidEmail": "Некорректный email",
+  "submit": "Войти"
+}

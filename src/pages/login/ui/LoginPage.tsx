@@ -1,3 +1,5 @@
+import { LoginForm } from '@/features/auth/login'
+
 export function LoginPage() {
-    return <div>LoginPage</div>
+    return <LoginForm />
 }

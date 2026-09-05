@@ -1,5 +1,5 @@
 import { MantineProvider } from "@mantine/core";
-import { AppRouter } from "@/app/providers/AppRouter.tsx";
+import { AppRouter } from "./providers/router/AppRouter.tsx";
 
 export function App() {
 
