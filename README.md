@@ -1,75 +1,135 @@
-# React + TypeScript + Vite
+# DCUT Frontend Test Task
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+SPA-приложение для прохождения тестов с авторизацией и управлением слайдами.
 
-Currently, two official plugins are available:
+## Стек
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React
+- TypeScript
+- Vite
+- React Router
+- Zustand
+- Mantine
+- Embla Carousel
+- i18next / react-i18next
+- Feature-Sliced Design (FSD)
 
-## React Compiler
+## Функциональность
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Авторизация
 
-## Expanding the ESLint configuration
+- Форма входа с валидацией email и пароля.
+- После успешной авторизации генерируется токен и сохраняется в состоянии приложения.
+- Авторизованный пользователь не может перейти на страницу входа.
+- Неавторизованный пользователь перенаправляется на `/login`.
+- Реализован выход из аккаунта.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Работа со слайдами
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Отображение слайдов в виде карусели.
+- Навигация стрелками и пагинацией.
+- Добавление нового слайда через модальное окно.
+- Удаление слайда с подтверждением.
+- Изменение состояния слайда «Выбран / Не выбран».
+- Empty state при отсутствии слайдов.
+- Состояние слайдов сохраняется между перезагрузками страницы.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Хранение состояния
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Для управления состоянием используется Zustand.
 
+Персистентность реализована через middleware `persist`:
+
+- состояние сессии сохраняется автоматически;
+- состояние слайдов сохраняется автоматически;
+- `persist` использует `localStorage` под капотом.
+- при инициализации приложения состояние автоматически восстанавливается из `localStorage`.
+
+Таким образом, приложение не работает с `localStorage` напрямую — сериализацией и восстановлением состояния занимается middleware Zustand.
+
+## Локализация
+
+Интерфейс подготовлен для двух языков:
+
+- Русский
+- English
+
+Переводы организованы на уровне соответствующих FSD-слайсов, а глобальная конфигурация i18next находится в `app`.
+
+## Архитектура
+
+Проект организован согласно Feature-Sliced Design:
+
+```text
+src/
+├── app/        # инициализация приложения, провайдеры, роутинг, layout
+├── pages/      # страницы приложения
+├── widgets/    # крупные составные блоки интерфейса
+├── features/   # пользовательские действия и сценарии
+├── entities/   # бизнес-сущности и их состояние
+└── shared/     # переиспользуемые общие компоненты и утилиты
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+Зависимости между слоями направлены сверху вниз:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```text
+app
+↓
+pages
+↓
+widgets
+↓
+features
+↓
+entities
+↓
+shared
 ```
+
+Для FSD-слайсов используются публичные API (index.ts), чтобы не зависеть от внутренней структуры слайса.
+
+## Запуск
+
+### Установить зависимости:
+
+```bash
+npm install
+```
+
+### Запустить приложение в режиме разработки:
+
+```bash
+npm run dev
+```
+
+### Проверить production-сборку:
+
+```bash
+npm run build
+```
+
+### Запустить линтер:
+
+```bash
+npm run lint
+```
+
+## Deployment
+
+Приложение предназначено для размещения на GitHub Pages.
+
+Для deployment на GitHub Pages используется `HashRouter`, поскольку GitHub Pages предоставляет статический хостинг и не выполняет server-side fallback для клиентских маршрутов.
+
+После deployment приложение доступно по адресу:
+
+```text
+https://andrewsmith000.github.io/dcut-frontend-test-task/#/login
+```
+
+## CI/CD
+
+При каждом push в `main` GitHub Actions:
+
+1. устанавливает зависимости;
+2. запускает production-сборку;
+3. публикует результат сборки на GitHub Pages.
