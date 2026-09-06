@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { HashRouter, Route, Routes } from 'react-router-dom'
 
 import { HomePage } from '@/pages/home'
 import { LoginPage } from '@/pages/login'
@@ -8,7 +8,7 @@ import { ProtectedRoute } from "./ProtectedRoute.tsx";
 
 export function AppRouter() {
     return (
-        <BrowserRouter>
+        <HashRouter>
             <Routes>
                 <Route element={<AppLayout />}>
                     <Route element={<GuestRoute />}>
@@ -20,6 +20,6 @@ export function AppRouter() {
                     </Route>
                 </Route>
             </Routes>
-        </BrowserRouter>
+        </HashRouter>
     )
 }
