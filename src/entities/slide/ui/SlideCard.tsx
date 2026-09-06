@@ -1,34 +1,52 @@
-import { Badge, Button, Card, Stack, Text, Title } from "@mantine/core";
+import type { ReactNode } from 'react'
+
+import { Box, Card, Group, Stack, Switch, Text, Title } from "@mantine/core";
 import { useTranslation } from "react-i18next";
 
-import { useSlideStore } from '../model/slideStore'
 import type { Slide } from '../model/types'
 
 interface SlideCardProps {
     slide: Slide;
+    onToggleChecked: (id: string) => void;
+    actions?: ReactNode;
 }
 
-export function SlideCard({ slide }: SlideCardProps) {
+export function SlideCard({ slide, onToggleChecked, actions }: SlideCardProps) {
     const { t } = useTranslation('slide');
-    const toggleChecked = useSlideStore((state) => state.toggleChecked)
 
     return (
-        <Card withBorder>
-            <Stack>
-                <Title order={3}>{slide.title}</Title>
+        <Card
+            withBorder
+            shadow="sm"
+            radius="md"
+            p="lg"
+            h={260}
+        >
+            <Stack h="100%"
+            >
+                <Group justify="space-between" align="flex-start">
+                    <Title order={2}>{slide.title}</Title>
 
-                <Text>{slide.annotation}</Text>
+                    {actions}
+                </Group>
 
-                <Badge>
-                    {slide.isChecked ? t('checked') : t('unchecked')}
-                </Badge>
+                <Text c="dimmed" size="md" lh={1.6}>{slide.annotation}</Text>
 
-                <Button
-                    variant="light"
-                    onClick={() => toggleChecked(slide.id)}
-                >
-                    {slide.isChecked ? t('markUnchecked') : t('markChecked')}
-                </Button>
+                <Group justify="flex-end" gap="xs" wrap="nowrap" mt="auto">
+                    <Switch
+                        size="md"
+                        checked={slide.isChecked}
+                        onChange={() => onToggleChecked(slide.id)}
+                    />
+
+                    <Box w={80} ta="right">
+                        <Text size="md">
+                            {slide.isChecked
+                                ? t('selected')
+                                : t('unselected')}
+                        </Text>
+                    </Box>
+                </Group>
             </Stack>
         </Card>
     )

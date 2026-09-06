@@ -1,4 +1,4 @@
-import { Box, Group, Text } from '@mantine/core';
+import { Box, Group } from '@mantine/core';
 
 import { useSessionStore } from '@/entities/session';
 import { LogoutButton } from "@/features/auth/logout";
@@ -19,7 +19,7 @@ export function Header() {
                 px="md"
                 justify="space-between"
             >
-                <Text fw={700}>DCUT TEST APP</Text>
+                <strong>DCUT TEST APP</strong>
 
                 {token && <LogoutButton />}
             </Group>

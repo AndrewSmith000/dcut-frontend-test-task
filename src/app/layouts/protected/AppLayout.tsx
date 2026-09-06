@@ -1,3 +1,4 @@
+import { Box } from '@mantine/core'
 import { Outlet } from 'react-router-dom';
 
 import { Header } from '@/widgets/header';
@@ -7,9 +8,14 @@ export function AppLayout() {
         <>
             <Header />
 
-            <main>
+            <Box
+                component="main"
+                px="md"
+                py="xl"
+                mih="calc(100vh - 60px)"
+            >
                 <Outlet />
-            </main>
+            </Box>
         </>
     )
 }

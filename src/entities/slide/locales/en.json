@@ -1,6 +1,6 @@
 {
   "checked": "Checked",
   "unchecked": "Not checked",
-  "markChecked": "Mark as checked",
-  "markUnchecked": "Mark as unchecked"
+  "selected": "Selected",
+  "unselected": "Not selected"
 }

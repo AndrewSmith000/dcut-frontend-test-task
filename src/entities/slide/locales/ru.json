@@ -1,6 +1,6 @@
 {
   "checked": "Выбран",
   "unchecked": "Не выбран",
-  "markChecked": "Отметить как выбранный",
-  "markUnchecked": "Отметить как невыбранный"
+  "selected": "Выбран",
+  "unselected": "Не выбран"
 }
