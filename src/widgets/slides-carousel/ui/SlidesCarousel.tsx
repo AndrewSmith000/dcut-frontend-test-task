@@ -3,21 +3,33 @@ import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react'
 import useEmblaCarousel from "embla-carousel-react";
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSearchParams } from 'react-router-dom'
 
-import {SlideCard, useSlideStore} from "@/entities/slide";
+import { SlideCard, useSlideStore } from "@/entities/slide";
 import { DeleteSlide } from '@/features/delete-slide'
+import { CopySlideUrl } from "@/features/copy-slide-url";
 
 import styles from '../slides-carousel.module.css'
 
 export function SlidesCarousel() {
     const { t } = useTranslation('slidesCarousel')
 
+    const [searchParams, setSearchParams] = useSearchParams()
     const slides = useSlideStore((state) => state.slides);
+    const slideId = searchParams.get('slide')
+
+    const initialIndex = Math.max(
+        slides.findIndex((slide) => slide.id === slideId),
+        0,
+    )
+
+    const [selectedIndex, setSelectedIndex] = useState(initialIndex)
+
     const toggleChecked = useSlideStore((state) => state.toggleChecked,)
 
-    const [selectedIndex, setSelectedIndex] = useState(0)
-
-    const [emblaRef, emblaApi] = useEmblaCarousel();
+    const [emblaRef, emblaApi] = useEmblaCarousel({
+        startIndex: initialIndex,
+    });
 
     useEffect(() => {
         if (!emblaApi) {
@@ -25,21 +37,29 @@ export function SlidesCarousel() {
         }
 
         const handleSelect = () => {
-            setSelectedIndex(emblaApi.selectedScrollSnap())
-        }
+            const index = emblaApi.selectedScrollSnap()
 
-        const handleReInit = () => {
-            setSelectedIndex(emblaApi.selectedScrollSnap())
+            setSelectedIndex(index)
+
+            const slide = slides[index]
+
+            if (!slide) return
+
+            setSearchParams(
+                (params) => {
+                    params.set('slide', slide.id)
+                    return params
+                },
+                { replace: true },
+            )
         }
 
         emblaApi.on('select', handleSelect)
-        emblaApi.on('reInit', handleReInit)
 
         return () => {
             emblaApi.off('select', handleSelect)
-            emblaApi.off('reInit', handleReInit)
         }
-    }, [emblaApi])
+    }, [emblaApi, slides, setSearchParams])
 
     useEffect(() => {
         if (!emblaApi) {
@@ -48,6 +68,20 @@ export function SlidesCarousel() {
 
         emblaApi.reInit()
     }, [emblaApi, slides.length])
+
+    useEffect(() => {
+        if (!emblaApi || !slideId) return
+
+        const index = slides.findIndex(
+            (slide) => slide.id === slideId,
+        )
+
+        if (index === -1) return
+
+        if (emblaApi.selectedScrollSnap() === index) return
+
+        emblaApi.scrollTo(index, true)
+    }, [emblaApi, slideId, slides])
 
     const scrollPrev = () => {
         emblaApi?.scrollPrev()
@@ -59,6 +93,43 @@ export function SlidesCarousel() {
 
     const scrollTo = (index: number) => {
         emblaApi?.scrollTo(index)
+    }
+
+    const removeSlide = useSlideStore((state) => state.removeSlide)
+
+    const handleSlideDeleted = (slideId: string) => {
+        const deletedIndex = slides.findIndex(
+            (slide) => slide.id === slideId,
+        )
+
+        if (deletedIndex === -1) return
+
+        const remainingSlides = slides.filter(
+            (slide) => slide.id !== slideId,
+        )
+
+        if (remainingSlides.length === 0) {
+            setSelectedIndex(0)
+            setSearchParams({}, { replace: true })
+            removeSlide(slideId)
+            return
+        }
+
+        const nextIndex = Math.min(
+            deletedIndex,
+            remainingSlides.length - 1,
+        )
+
+        const nextSlide = remainingSlides[nextIndex]
+
+        setSelectedIndex(nextIndex)
+
+        setSearchParams(
+            { slide: nextSlide.id },
+            { replace: true },
+        )
+
+        removeSlide(slideId)
     }
 
     return (
@@ -80,9 +151,13 @@ export function SlidesCarousel() {
                                         slide={slide}
                                         onToggleChecked={toggleChecked}
                                         actions={
-                                            <DeleteSlide
-                                                slideId={slide.id}
-                                            />
+                                            <Group gap="xs">
+                                                <CopySlideUrl slideId={slide.id} />
+
+                                                <DeleteSlide
+                                                    onConfirm={() => handleSlideDeleted(slide.id)}
+                                                />
+                                            </Group>
                                         }
                                     />
                                 </div>

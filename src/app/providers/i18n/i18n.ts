@@ -13,6 +13,8 @@ import deleteSlideRu from '@/features/delete-slide/locales/ru.json'
 import deleteSlideEn from '@/features/delete-slide/locales/en.json'
 import logoutRu from '@/features/auth/logout/locales/ru.json'
 import logoutEn from '@/features/auth/logout/locales/en.json'
+import copySlideUrlRu from '@/features/copy-slide-url/locales/ru.json'
+import copySlideUrlEn from '@/features/copy-slide-url/locales/en.json'
 
 i18n
     .use(initReactI18next)
@@ -28,6 +30,7 @@ i18n
                 createSlide: createSlideRu,
                 deleteSlide: deleteSlideRu,
                 logout: logoutRu,
+                copySlideUrl: copySlideUrlRu,
             },
             en: {
                 login: loginEn,
@@ -36,6 +39,7 @@ i18n
                 createSlide: createSlideEn,
                 deleteSlide: deleteSlideEn,
                 logout: logoutEn,
+                copySlideUrl: copySlideUrlEn,
             },
         },
 
