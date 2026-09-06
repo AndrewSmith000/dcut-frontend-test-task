@@ -1,0 +1,1 @@
+export { DeleteSlide } from './ui/DeleteSlide'

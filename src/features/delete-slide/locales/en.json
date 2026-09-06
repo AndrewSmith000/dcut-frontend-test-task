@@ -1,0 +1,7 @@
+{
+  "delete": "Delete",
+  "confirmTitle": "Delete slide?",
+  "confirmMessage": "This action cannot be undone.",
+  "cancel": "Cancel",
+  "confirm": "Delete"
+}
