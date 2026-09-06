@@ -53,6 +53,7 @@ export function CreateSlide() {
                 opened={opened}
                 onClose={handleClose}
                 title={t('title')}
+                centered
             >
                 <form onSubmit={form.onSubmit(handleSubmit)}>
                     <Stack>
