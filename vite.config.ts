@@ -4,6 +4,7 @@ import path from 'node:path'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/dcut-frontend-test-task/',
   plugins: [react()],
   resolve: {
     alias: {
