@@ -1,0 +1,5 @@
+{
+  "previous": "Previous slide",
+  "next": "Next slide",
+  "goToSlide": "Go to slide {{number}}"
+}
