@@ -24,10 +24,19 @@ export function SlideCard({ slide, onToggleChecked, actions }: SlideCardProps) {
         >
             <Stack h="100%"
             >
-                <Group justify="space-between" align="flex-start">
-                    <Title order={2}>{slide.title}</Title>
+                <Group justify="space-between" align="flex-start" wrap="nowrap">
+                    <Title
+                        order={2}
+                        style={{
+                            flex: 1,
+                            minWidth: 0,
+                            overflowWrap: 'anywhere',
+                        }}
+                    >{slide.title}</Title>
 
-                    {actions}
+                    <Box style={{ flexShrink: 0 }}>
+                        {actions}
+                    </Box>
                 </Group>
 
                 <Text c="dimmed" size="md" lh={1.6}>{slide.annotation}</Text>
