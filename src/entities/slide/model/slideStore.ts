@@ -3,14 +3,14 @@ import { persist } from "zustand/middleware";
 
 import type { Slide } from "./types";
 
-interface CreateSlideData {
+interface CreateSlideInput {
     title: string;
     annotation: string;
 }
 
 interface SlideState {
     slides: Slide[];
-    addSlide: (data: CreateSlideData) => void;
+    addSlide: (data: CreateSlideInput) => void;
     removeSlide: (id: string) => void;
     toggleChecked: (id: string) => void;
 }

@@ -4,11 +4,9 @@ import { AppRouter } from "./providers/router/AppRouter.tsx";
 export function App() {
 
   return (
-    <>
       <MantineProvider>
-        <AppRouter />
+          <AppRouter />
       </MantineProvider>
-    </>
   )
 }
 

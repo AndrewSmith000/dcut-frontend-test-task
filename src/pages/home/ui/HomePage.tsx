@@ -1,7 +1,7 @@
 import { Stack } from "@mantine/core";
 
 import { CreateSlide } from '@/features/create-slide'
-import { SlidesCarousel } from '../../../widgets/slides-carousel'
+import { SlidesCarousel } from '@/widgets/slides-carousel'
 
 export function HomePage() {
     return (

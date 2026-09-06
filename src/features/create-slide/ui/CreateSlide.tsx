@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import { useSlideStore } from "@/entities/slide";
 
-interface CreateSlideProps {
+interface CreateSlideFormValues {
     title: string;
     annotation: string;
 }
@@ -17,7 +17,7 @@ export function CreateSlide() {
 
     const { t } = useTranslation('createSlide');
 
-    const form = useForm<CreateSlideProps>({
+    const form = useForm<CreateSlideFormValues>({
         initialValues: {
             title: '',
             annotation: '',
@@ -28,7 +28,7 @@ export function CreateSlide() {
         },
     })
 
-    const handleSubmit = (values: CreateSlideProps) => {
+    const handleSubmit = (values: CreateSlideFormValues) => {
         addSlide({
             title: values.title.trim(),
             annotation: values.annotation.trim(),
