@@ -1,4 +1,4 @@
-import { ActionIcon, Box, Group, Stack } from "@mantine/core";
+import { ActionIcon, Box, Group, Stack, Text } from "@mantine/core";
 import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react'
 import useEmblaCarousel from "embla-carousel-react";
 import { useEffect, useState } from 'react'
@@ -62,66 +62,75 @@ export function SlidesCarousel() {
     }
 
     return (
-        <Stack align="center">
-            <Box
-                w={{ base: '92%', sm: '70%', md: '50%', lg: '38%' }}
-                maw={500}
-            >
-                <div className={styles.viewport} ref={emblaRef}>
-                    <div className={styles.container}>
-                        {slides.map((slide) => (
-                            <div className={styles.slide} key={slide.id}>
-                                <SlideCard
-                                    slide={slide}
-                                    onToggleChecked={toggleChecked}
-                                    actions={
-                                        <DeleteSlide
-                                            slideId={slide.id}
-                                        />
-                                    }
-                                />
-                            </div>
-                        ))}
+        <Stack align="center" w="100%">
+            {slides.length === 0 ? (
+                <Text c="dimmed">
+                    {t('empty')}
+                </Text>
+            ) : (
+                <Box
+                    w={{ base: '92%', sm: '70%', md: '50%', lg: '38%' }}
+                    maw={500}
+                >
+                    <div className={styles.viewport} ref={emblaRef}>
+                        <div className={styles.container}>
+                            {slides.map((slide) => (
+                                <div className={styles.slide} key={slide.id}>
+                                    <SlideCard
+                                        slide={slide}
+                                        onToggleChecked={toggleChecked}
+                                        actions={
+                                            <DeleteSlide
+                                                slideId={slide.id}
+                                            />
+                                        }
+                                    />
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                </div>
-            </Box>
+                </Box>
+            )}
 
-            <Group gap="xs">
-                <ActionIcon
-                    variant="default"
-                    onClick={scrollPrev}
-                    disabled={selectedIndex === 0}
-                    aria-label={t('previousSlide')}
-                >
-                    <IconChevronLeft size={18} />
-                </ActionIcon>
 
-                {slides.map((slide, index) => (
+            {slides.length > 0 && (
+                <Group gap="xs">
                     <ActionIcon
-                        key={slide.id}
-                        variant={
-                            index === selectedIndex
-                                ? 'filled'
-                                : 'default'
-                        }
-                        onClick={() => scrollTo(index)}
-                        aria-label={t('slideNumber', {
-                            number: index + 1,
-                        })}
+                        variant="default"
+                        onClick={scrollPrev}
+                        disabled={selectedIndex === 0}
+                        aria-label={t('previousSlide')}
                     >
-                        {index + 1}
+                        <IconChevronLeft size={18} />
                     </ActionIcon>
-                ))}
 
-                <ActionIcon
-                    variant="default"
-                    onClick={scrollNext}
-                    disabled={selectedIndex === slides.length - 1}
-                    aria-label={t('nextSlide')}
-                >
-                    <IconChevronRight size={18} />
-                </ActionIcon>
-            </Group>
+                    {slides.map((slide, index) => (
+                        <ActionIcon
+                            key={slide.id}
+                            variant={
+                                index === selectedIndex
+                                    ? 'filled'
+                                    : 'default'
+                            }
+                            onClick={() => scrollTo(index)}
+                            aria-label={t('slideNumber', {
+                                number: index + 1,
+                            })}
+                        >
+                            {index + 1}
+                        </ActionIcon>
+                    ))}
+
+                    <ActionIcon
+                        variant="default"
+                        onClick={scrollNext}
+                        disabled={selectedIndex === slides.length - 1}
+                        aria-label={t('nextSlide')}
+                    >
+                        <IconChevronRight size={18} />
+                    </ActionIcon>
+                </Group>
+            )}
         </Stack>
     )
 }

@@ -1,5 +1,6 @@
 {
   "previous": "Previous slide",
   "next": "Next slide",
-  "goToSlide": "Go to slide {{number}}"
+  "goToSlide": "Go to slide {{number}}",
+  "empty": "No slides yet"
 }
