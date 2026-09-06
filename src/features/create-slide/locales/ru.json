@@ -1,0 +1,10 @@
+{
+  "open": "Добавить слайд",
+  "title": "Новый слайд",
+  "slideTitle": "Название",
+  "slideTitlePlaceholder": "Введите название",
+  "annotation": "Описание",
+  "annotationPlaceholder": "Введите описание",
+  "titleRequired": "Название обязательно",
+  "create": "Создать"
+}

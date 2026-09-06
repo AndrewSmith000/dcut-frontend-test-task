@@ -1,0 +1,10 @@
+{
+  "open": "Add slide",
+  "title": "New slide",
+  "slideTitle": "Title",
+  "slideTitlePlaceholder": "Enter title",
+  "annotation": "Annotation",
+  "annotationPlaceholder": "Enter annotation",
+  "titleRequired": "Title is required",
+  "create": "Create"
+}
