@@ -1,20 +1,53 @@
-import { ActionIcon, Group, Stack } from "@mantine/core";
+import { ActionIcon, Box, Group, Stack } from "@mantine/core";
+import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react'
 import useEmblaCarousel from "embla-carousel-react";
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
-import { DeleteSlide } from '@/features/delete-slide'
 import {SlideCard, useSlideStore} from "@/entities/slide";
+import { DeleteSlide } from '@/features/delete-slide'
 
 import styles from '../slides-carousel.module.css'
 
 export function SlidesCarousel() {
-    const slides = useSlideStore((state) => state.slides);
     const { t } = useTranslation('slidesCarousel')
+
+    const slides = useSlideStore((state) => state.slides);
+    const toggleChecked = useSlideStore((state) => state.toggleChecked,)
 
     const [selectedIndex, setSelectedIndex] = useState(0)
 
     const [emblaRef, emblaApi] = useEmblaCarousel();
+
+    useEffect(() => {
+        if (!emblaApi) {
+            return
+        }
+
+        const handleSelect = () => {
+            setSelectedIndex(emblaApi.selectedScrollSnap())
+        }
+
+        const handleReInit = () => {
+            setSelectedIndex(emblaApi.selectedScrollSnap())
+        }
+
+        emblaApi.on('select', handleSelect)
+        emblaApi.on('reInit', handleReInit)
+
+        return () => {
+            emblaApi.off('select', handleSelect)
+            emblaApi.off('reInit', handleReInit)
+        }
+    }, [emblaApi])
+
+    useEffect(() => {
+        if (!emblaApi) {
+            return
+        }
+
+        emblaApi.reInit()
+    }, [emblaApi, slides.length])
 
     const scrollPrev = () => {
         emblaApi?.scrollPrev()
@@ -24,66 +57,69 @@ export function SlidesCarousel() {
         emblaApi?.scrollNext()
     }
 
-    const onSelect = useCallback(() => {
-        if (!emblaApi) {
-            return
-        }
-
-        setSelectedIndex(emblaApi.selectedScrollSnap())
-    }, [emblaApi])
-
-    useEffect(() => {
-        if (!emblaApi) {
-            return
-        }
-
-        emblaApi.on('select', onSelect)
-
-        return () => {
-            emblaApi.off('select', onSelect)
-        }
-    }, [emblaApi, onSelect])
+    const scrollTo = (index: number) => {
+        emblaApi?.scrollTo(index)
+    }
 
     return (
-        <Stack>
-            <div className={styles.viewport} ref={emblaRef}>
-                <div className={styles.container}>
-                    {slides.map((slide) => (
-                        <div className={styles.slide} key={slide.id}>
-                            <SlideCard slide={slide} />
-                            <DeleteSlide slideId={slide.id} />
-                        </div>
-                    ))}
+        <Stack align="center">
+            <Box
+                w={{ base: '92%', sm: '70%', md: '50%', lg: '38%' }}
+                maw={500}
+            >
+                <div className={styles.viewport} ref={emblaRef}>
+                    <div className={styles.container}>
+                        {slides.map((slide) => (
+                            <div className={styles.slide} key={slide.id}>
+                                <SlideCard
+                                    slide={slide}
+                                    onToggleChecked={toggleChecked}
+                                    actions={
+                                        <DeleteSlide
+                                            slideId={slide.id}
+                                        />
+                                    }
+                                />
+                            </div>
+                        ))}
+                    </div>
                 </div>
-            </div>
+            </Box>
 
-            <Group justify="center">
+            <Group gap="xs">
                 <ActionIcon
                     variant="default"
                     onClick={scrollPrev}
-                    aria-label={t('previous')}
+                    disabled={selectedIndex === 0}
+                    aria-label={t('previousSlide')}
                 >
-                    -
+                    <IconChevronLeft size={18} />
                 </ActionIcon>
 
-                <Group gap="xs">
-                    {slides.map((slide, index) => (
-                        <ActionIcon
-                            key={slide.id}
-                            variant={index === selectedIndex ? 'filled' : 'default'}
-                            onClick={() => emblaApi?.scrollTo(index)}
-                            aria-label={t('goToSlide', { number: index + 1 })}
-                        >
-                            {index + 1}
-                        </ActionIcon>
-                    ))}
-                </Group>
+                {slides.map((slide, index) => (
+                    <ActionIcon
+                        key={slide.id}
+                        variant={
+                            index === selectedIndex
+                                ? 'filled'
+                                : 'default'
+                        }
+                        onClick={() => scrollTo(index)}
+                        aria-label={t('slideNumber', {
+                            number: index + 1,
+                        })}
+                    >
+                        {index + 1}
+                    </ActionIcon>
+                ))}
 
                 <ActionIcon
                     variant="default"
                     onClick={scrollNext}
+                    disabled={selectedIndex === slides.length - 1}
+                    aria-label={t('nextSlide')}
                 >
-                    +
+                    <IconChevronRight size={18} />
                 </ActionIcon>
             </Group>
         </Stack>
