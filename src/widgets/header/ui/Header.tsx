@@ -1,8 +1,11 @@
 import { Box, Group, Text } from '@mantine/core';
 
+import { useSessionStore } from '@/entities/session';
 import { LogoutButton } from "@/features/auth/logout";
 
 export function Header() {
+    const token = useSessionStore((state) => state.token);
+
     return (
         <Box
             component="header"
@@ -18,7 +21,7 @@ export function Header() {
             >
                 <Text fw={700}>DCUT TEST APP</Text>
 
-                <LogoutButton/>
+                {token && <LogoutButton />}
             </Group>
         </Box>
     )
