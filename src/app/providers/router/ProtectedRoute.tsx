@@ -1,5 +1,6 @@
-import { Navigate, Outlet } from 'react-router-dom'
-import { useSessionStore } from '@/entities/session'
+import { Navigate, Outlet } from 'react-router-dom';
+
+import { useSessionStore } from '@/entities/session';
 
 export function ProtectedRoute() {
     const token = useSessionStore((state) => state.token)

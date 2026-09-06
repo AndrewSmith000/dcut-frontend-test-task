@@ -1,3 +1,11 @@
+import { CreateSlide } from '@/features/create-slide'
+import { SlidesCarousel } from '../../../widgets/slides-carousel'
+
 export function HomePage() {
-    return <div>HomePage</div>
+    return (
+        <>
+            <CreateSlide />
+            <SlidesCarousel />
+        </>
+    )
 }
